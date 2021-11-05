@@ -3,6 +3,7 @@ import styled from 'styled-components';
 interface ButtonProps {
     height?: number;
     color?: string;
+    marginTop?: number;
 }
 
 
@@ -17,6 +18,7 @@ export const Button = styled.button<ButtonProps>`
    font-size: 20px;
    border-radius: var(--radius);
    height: ${props => props.height}px;
+   margin-top: ${props => props.marginTop}px;
    &:active{
        opacity: 0.5;
    }

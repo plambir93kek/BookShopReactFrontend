@@ -1,21 +1,52 @@
 import React from 'react';
-import styled from 'styled-components';
+import { useAddToCartMutation, useDeleteFromCartMutation } from '../../store/CartSlice/cartAPi';
+import { addBookToCart, removeBook } from '../../store/CartSlice/cartSlice';
+import { useAppDispatch, useAppSelector } from '../../store/store';
+import { showLoginForm } from '../../store/UserSlice/userSlice';
+import { Book } from '../../Types/BookType';
 import { Button } from '../Button/Button';
 import { BookContainter, Description, BookImage, BookPrice, Discont } from './StyledElements';
 
 interface BookItemProps {
   inCart?: boolean
-}
+  book?: Book;
+};
 
-const BookItem: React.FC<BookItemProps> = ({inCart}) => {
+
+const BookItem: React.FC<BookItemProps> = ({inCart, book }) => {
+  
+  const [addToCart ] = useAddToCartMutation()
+  const userId = useAppSelector(state => state.userSlice._id);
+  const isAuth = useAppSelector(state => state.userSlice.isAuth);
+  const [deleteFromCart] = useDeleteFromCartMutation();
+  const dispatch = useAppDispatch()
+
+  const addBook = async() => {
+    if(isAuth){
+      await addToCart({userId, book})
+    dispatch(addBookToCart(book))
+    }else{
+      dispatch(showLoginForm(true))
+    }
+  };
+
+ const deleteBook = async() => {
+  await deleteFromCart({userId, book})
+  dispatch(removeBook(book?._id))
+ }
+ 
   return (
       <BookContainter>
-        <BookImage src='https://skidka-chelyabinsk.ru/images/prodacts/sourse/61968/61968341_pervaya-nauchnaya-istoriya-voynyi-1812-goda-ast.jpg'></BookImage>
-        <Discont>-25%</Discont>
-        <BookPrice>1 662 ₽</BookPrice>
-        <Description>Первая научная история войны 1812 года. Третье издание</Description>
-        <Description>Автор: E.Н. Понасенков</Description>
-        <Button>{inCart? 'Delete' : 'to Cart'}</Button>
+        <BookImage src={`https://bookshopbacknest.herokuapp.com/images/${book?.picture}`}></BookImage>
+        <Discont>-{book?.discont}</Discont>
+        <BookPrice>{book?.price} ₽</BookPrice>
+        <Description>{book?.name}</Description>
+        <Description>Автор: {book?.author}</Description>
+        {inCart?
+        <Button onClick={deleteBook}>Remove</Button>
+        :
+        <Button onClick={addBook}>Add to Cart</Button>
+        }
       </BookContainter>
   )
 };

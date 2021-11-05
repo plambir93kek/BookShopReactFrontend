@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IoCartOutline } from 'react-icons/io5'
+import { useAppDispatch, useAppSelector } from '../../store/store';
+import { showLoginForm } from '../../store/UserSlice/userSlice';
+import { useHistory } from 'react-router';
+
 
 const Container = styled.div`
   position: relative;
@@ -9,6 +13,9 @@ const Container = styled.div`
   align-items: center;
   box-sizing: content-box;
   margin-right: 20px;
+  @media(max-width: 500px){
+    margin-right: 8px;
+  }
 `;
 
 const Indicator = styled.div`
@@ -27,11 +34,29 @@ const Indicator = styled.div`
 `;
 
 const CartIcon = () => {
-   
+
+  const dispatch = useAppDispatch();
+  const {isAuth} = useAppSelector(state => state.userSlice);
+  const history = useHistory();
+
+  const useCart = () => {
+     if(isAuth){
+       history.push('/cart')
+     } else {
+       dispatch(showLoginForm(true))
+     }
+  };
+
+  const books = useAppSelector(state=> state.cartSlice.books);
+
     return (
-        <Container>
+        <Container onClick={useCart}>
            <IoCartOutline size='35px'/>
-           <Indicator>1</Indicator>
+           {isAuth? 
+            <Indicator>{books?.length}</Indicator>
+            :
+            ''
+           }
         </Container>
     )
 };
