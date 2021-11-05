@@ -21,13 +21,16 @@ const Container = styled.div`
 const MainPage = () => {
 
     const searchTerm = useAppSelector(state => state.searchReducer.searchTerm);
-    const { data: books, error } = booksApi.useGetBooksQuery(searchTerm);
+    const { data: books, error, isLoading } = booksApi.useGetBooksQuery(searchTerm);
 
 
     return (
       <>
       {error &&
       <h1 style={{textAlign:'center'}}>Sorry, some problems with server</h1>
+      }
+      {isLoading && 
+       <h1 style={{textAlign:'center'}}>...Loading data, please wait</h1>
       }
         <Container>
             <WrapperMain>
