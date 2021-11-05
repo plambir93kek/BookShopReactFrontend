@@ -5,6 +5,7 @@
 * React
 * Redux ToolKit, RTK-query
 * Styled components
+* React Testing Library
 
 ### Функционал:
 * Отображение списка товаров
