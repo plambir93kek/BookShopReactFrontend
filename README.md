@@ -1,4 +1,5 @@
 # Мой Пэт-проект BookShop
+### Deployed - https://bookshopreact.herokuapp.com/
 ### Backend: https://github.com/plambir93kek/BookShopNestBackend
 
 ### Стек:
